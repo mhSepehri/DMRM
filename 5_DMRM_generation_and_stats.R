@@ -18,8 +18,10 @@ compute_ratios <- function(beta_matrix, num_cpgs, den_cpgs) {
   rownames(ratio_matrix) <- paste(cpg_pairs$Num, cpg_pairs$Den, sep = "/")
   colnames(ratio_matrix) <- colnames(beta_matrix)
   
+  # pseudo-count guards against near-zero denominators (some CD8 betas ~ 0)
+  eps <- 1e-3
   for (i in seq_len(nrow(cpg_pairs))) {
-    ratio_matrix[i, ] <- num_mat[cpg_pairs$Num[i], ] / den_mat[cpg_pairs$Den[i], ]
+    ratio_matrix[i, ] <- (num_mat[cpg_pairs$Num[i], ] + eps) / (den_mat[cpg_pairs$Den[i], ] + eps)
   }
   return(ratio_matrix)
 }
