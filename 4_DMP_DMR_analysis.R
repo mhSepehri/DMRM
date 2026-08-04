@@ -51,6 +51,10 @@ pheno_HC <- c(rep("CD4", sum(hc_CD4_cols)), rep("CD8", sum(hc_CD8_cols)))
 myDMP_HC <- champ.DMP(beta = beta_HC, pheno = pheno_HC, adjPVal = 0.05)
 dmp_HC_df <- myDMP_HC[[1]]
 
+# Keep only strongly lineage-specific sites: absolute fold change > 3 (log2FC > log2(3))
+fc_cut <- log2(3)
+dmp_HC_df <- dmp_HC_df[abs(dmp_HC_df$logFC) > fc_cut, ]
+
 saveRDS(rownames(dmp_HC_df[dmp_HC_df$logFC > 0, ]), "results/Hyper_Healthy_CD4.rds")
 saveRDS(rownames(dmp_HC_df[dmp_HC_df$logFC < 0, ]), "results/Hypo_Healthy_CD4.rds")
 saveRDS(rownames(dmp_HC_df[dmp_HC_df$logFC < 0, ]), "results/Hyper_Healthy_CD8.rds")
